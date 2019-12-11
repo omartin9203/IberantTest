@@ -1,5 +1,5 @@
 ﻿import React, { Component } from "react";
-import { Form, Alert, Card, Tabs, Row, Col, Radio, Layout } from "antd";
+import { Form, Alert, Card, Tabs, Row, Col, Radio, Layout, Button } from "antd";
 import { FormComponentProps } from "antd/lib/form";
 import { TestItem, TestItemStore } from "src/stores/test-store";
 import { connect } from "redux-scaffolding-ts";
@@ -18,7 +18,9 @@ interface TestItemViewProps
     onClose: (id: string | undefined, item?: TestItem) => void;
 }
 
-interface TestItemViewState { }
+interface TestItemViewState {
+    modeDetail: boolean;
+}
 
 @connect(["TestItems", TestItemStore])
 class TestItemView extends React.Component<
@@ -31,10 +33,13 @@ TestItemViewState
 
     constructor(props: TestItemViewProps & FormComponentProps) {
         super(props);
-        this.state = {};
+        this.state = {
+            modeDetail: true,
+        };
     }
 
     componentWillMount(): void {
+        console.log('jajajaja');
         this.load();
     }
 
@@ -54,7 +59,7 @@ TestItemViewState
     @autobind
     private onDashboardChanged(e: any) {
         const dashboard = e.target.value;
-        this.setState({ dashboard });
+        this.setState({ ...dashboard, modeDetail: true });
     }
 
     public render() {
@@ -80,15 +85,22 @@ TestItemViewState
                                         onSaveItem={this.handleUpdateItem}
                                         form={this.props.form}
                                         autosave={false}
+                                        modeDetail={this.state.modeDetail}
                                     >
                                         <TestItemFormBody
                                             item={this.TestItemStore.state.item}
                                             getFieldDecorator={getFieldDecorator}
                                             getFieldValue={this.props.form.getFieldValue}
                                             setFieldsValue={this.props.form.setFieldsValue}
+                                            modeDetail={this.state.modeDetail}
                                         />
                                     </FormEditorView>
 
+                                </Row>
+                            )}
+                            {this.TestItemStore.state.item && this.state.modeDetail && (
+                                <Row gutter={24}>
+                                    <Button onClick={() => { this.setState({ modeDetail: false }) }}>Editar</Button>
                                 </Row>
                             )}
                         </Card>

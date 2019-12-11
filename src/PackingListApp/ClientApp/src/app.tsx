@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { Route, RouteComponentProps, withRouter } from 'react-router';
 import HomePage from './pages/home';
 import TestIndex from './pages/TestModel/index';
-import PersonIndex from './pages/PersonModel/index'
+import TestItemView from './pages/TestModel/detail';
+import PersonIndex from './pages/PersonModel/index';
+import PersonItemView from './pages/PersonModel/detail';
 import autobind from 'autobind-decorator';
 import { Layout, Menu, Icon, Divider, Modal, DatePicker, Input, InputNumber } from 'antd';
 import HttpService from './services/http-service';
@@ -50,7 +52,10 @@ class App extends Component<AppProps, AppState> {
                 </Sider>
                 <Route exact path='/' component={HomePage} />
                 <Route exact path='/test' component={TestIndex} />
+                <Route exact path='/test/:id' component={TestItemView} />
                 <Route exact path='/TODO' component={PersonIndex} />
+                <Route exact path='/person/:id' component={PersonItemView} />
+
             </Layout>);
     }
 }

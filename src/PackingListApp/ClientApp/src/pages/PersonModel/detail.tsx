@@ -1,5 +1,5 @@
 ﻿import React, { Component } from "react";
-import { Form, Alert, Card, Tabs, Row, Col, Radio, Layout } from "antd";
+import { Form, Alert, Card, Tabs, Row, Col, Radio, Layout, Button } from "antd";
 import { FormComponentProps } from "antd/lib/form";
 import { PersonItem, PersonItemStore } from "src/stores/test-store";
 import { connect } from "redux-scaffolding-ts";
@@ -18,7 +18,9 @@ interface PersonItemViewProps
     onClose: (id: string | undefined, item?: PersonItem) => void;
 }
 
-interface PersonItemViewState { }
+interface PersonItemViewState {
+    modeDetail: boolean;
+}
 
 @connect(["PersonItems", PersonItemStore])
 class PersonItemView extends React.Component<
@@ -26,12 +28,14 @@ PersonItemViewProps & FormComponentProps,
 PersonItemViewState
 > {
     private get PersonItemStore() {
-        return (this.props as any).TestItems as PersonItemStore;
+        return (this.props as any).PersonItems as PersonItemStore;
     }
 
     constructor(props: PersonItemViewProps & FormComponentProps) {
         super(props);
-        this.state = {};
+        this.state = {
+            modeDetail: true,
+        };
     }
 
     componentWillMount(): void {
@@ -54,7 +58,7 @@ PersonItemViewState
     @autobind
     private onDashboardChanged(e: any) {
         const dashboard = e.target.value;
-        this.setState({ dashboard });
+        this.setState({ ...dashboard, modeDetail: true });
     }
 
     public render() {
@@ -80,15 +84,22 @@ PersonItemViewState
                                         onSaveItem={this.handleUpdateItem}
                                         form={this.props.form}
                                         autosave={false}
+                                        modeDetail={this.state.modeDetail}
                                     >
                                         <PersonItemFormBody
                                             item={this.PersonItemStore.state.item}
                                             getFieldDecorator={getFieldDecorator}
                                             getFieldValue={this.props.form.getFieldValue}
                                             setFieldsValue={this.props.form.setFieldsValue}
+                                            modeDetail={this.state.modeDetail}
                                         />
                                     </FormEditorView>
 
+                                </Row>
+                            )}
+                            {this.PersonItemStore.state.item && this.state.modeDetail && (
+                                <Row gutter={24}>
+                                    <Button onClick={() => { this.setState({ modeDetail: false }) } }>Editar</Button>
                                 </Row>
                             )}
                         </Card>

@@ -1,12 +1,13 @@
 import React, { Component } from "react";
-import { Layout, Input, Alert, Row, Col } from "antd";
+import { Layout, Input, Alert, Row, Col, Result } from "antd";
 import HeaderComponent from "../../components/shell/header";
 import { TableModel, TableView } from "../../components/collections/table";
 import { RouteComponentProps } from "react-router";
 import { Query, ItemState } from "../../stores/dataStore";
 import {
     PersonItemsStore,
-    PersonItem
+    PersonItem,
+    PersonItemStore
 } from "src/stores/test-store";
 import { connect } from "redux-scaffolding-ts";
 import autobind from "autobind-decorator";
@@ -29,6 +30,7 @@ export default class PersonItemListPage extends Component<
     PersonItemListState
 > {
     private id: number = -1;
+    
     private get PersonItemsStore() {
         return (this.props as any).PersonItems as PersonItemsStore;
     }
@@ -60,6 +62,17 @@ export default class PersonItemListPage extends Component<
     }
 
     @autobind
+    private async onSaveItem(item: PersonItem, state: ItemState) {
+        var result = await this.PersonItemsStore.saveAsync(
+            `${item.id}`,
+            item,
+            state
+        );
+        await this.load(this.state.query);
+        return result;
+    }
+
+    @autobind
     private onQueryChanged(query: Query) {
         this.setState({ query });
         this.load(query);
@@ -84,7 +97,9 @@ export default class PersonItemListPage extends Component<
         item: PersonItem,
         state: ItemState
     ): Promise<CommandResult<any>> {
-        return await this.PersonItemsStore.deleteAsync(`${item.id}`);
+        var result = await this.PersonItemsStore.deleteAsync(`${item.id}`);
+        await this.load(this.state.query);
+        return result;
     }
 
   
@@ -96,26 +111,22 @@ export default class PersonItemListPage extends Component<
                 {
                     field: "name",
                     title: "Name",
-                    renderer: data =>
-                        <Link
-                            to={{
-                                pathname: `person/${data.id}`,
-                                state: this.props.location.state
-                            }}
-                        >
-                            <span>{data.Name}</span>
-                        </Link>
+                    renderer: data => <span>{data.name}</span>,
+                    editor: data => <Input />
 
                 },
                 {
                     field: "lastName",
                     title: "Last Name",
-                    renderer: data => <span>{data.LastName}</span>,
+                    renderer: data => <span>{data.lastName}</span>,
+                    editor: data => <Input />
                 },
                 {
                     field: "occupation",
                     title: "Occupation",
-                    renderer: data => <span>{data.Occupation}</span>,
+                    renderer: data => <span>{data.occupation}</span>,
+                    editor: data => <Input />
+
                 },
 
             ],
@@ -152,6 +163,9 @@ export default class PersonItemListPage extends Component<
                             canDelete={true}
                             canCreateNew={true}
                             hidepagination={true}
+                            onDeleteRow={this.onDeleteRow}
+                            canEdit={true}
+                            onSaveRow={this.onSaveItem}
                         />
                         {this.state.newShow && <NewPersonItemView  onClose={this.onNewItemClosed}/>}
                     </div>

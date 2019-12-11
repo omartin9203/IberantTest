@@ -24,6 +24,7 @@ interface ClassFormBodyProps {
     setFieldsValue(obj: Object): void;
     getFieldValue(fieldName: string): any;
     getFieldDecorator<T extends Object = {}>(id: keyof T, options?: GetFieldDecoratorOptions): (node: React.ReactNode) => React.ReactNode;
+    modeDetail: boolean;
 }
 
 export class TestItemFormBody extends React.Component<ClassFormBodyProps> {
@@ -128,7 +129,7 @@ class NewTestItemView extends React.Component<NewTestItemViewProps & FormCompone
                     />
                 }
                 <Spin spinning={this.TestItemsStore.state.isBusy}>
-                    <TestItemFormBody item={this.TestItemsStore.state.item} getFieldDecorator={getFieldDecorator} getFieldValue={this.props.form.getFieldValue} setFieldsValue={this.props.form.setFieldsValue} onSave={this.onCreateNewItem} />
+                    <TestItemFormBody item={this.TestItemsStore.state.item} getFieldDecorator={getFieldDecorator} getFieldValue={this.props.form.getFieldValue} setFieldsValue={this.props.form.setFieldsValue} onSave={this.onCreateNewItem} modeDetail={false} />
                 </Spin>
             </Modal>
         );

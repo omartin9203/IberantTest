@@ -1,5 +1,5 @@
 ﻿import * as React from 'react'
-import { Form, Spin, Select, Input, Checkbox, Modal, Row, Col, Alert, InputNumber, Table } from 'antd';
+import { Form, Spin, Select, Input, Checkbox, Modal, Row, Col, Alert, InputNumber, Table, Button } from 'antd';
 import { FormComponentProps } from 'antd/lib/form';
 let FormItem = Form.Item;
 import { NewPersonItem, NewPersonItemStore } from 'src/stores/test-store';
@@ -24,11 +24,21 @@ interface ClassFormBodyProps {
     setFieldsValue(obj: Object): void;
     getFieldValue(fieldName: string): any;
     getFieldDecorator<T extends Object = {}>(id: keyof T, options?: GetFieldDecoratorOptions): (node: React.ReactNode) => React.ReactNode;
+    modeDetail: boolean;
 }
 
-export class PersonItemFormBody extends React.Component<ClassFormBodyProps> {
+interface ClassFormBodyState {
+    modeDetail: boolean;
+}
 
-  
+export class PersonItemFormBody extends React.Component<ClassFormBodyProps, ClassFormBodyState> {
+
+    constructor(props: ClassFormBodyProps) {
+        super(props);
+        this.state = {
+            modeDetail: props.modeDetail,
+        };
+    }
 
     render() {
 
@@ -41,36 +51,29 @@ export class PersonItemFormBody extends React.Component<ClassFormBodyProps> {
             <Row gutter={24}>
                 <Col span={20}>
                     <FormItem label={"Name"}>
-                        {getFieldDecorator(nameof<NewPersonItem>('Name'), {
-                            initialValue: item.Name,
-                        })(
-                            <Input />
-                        )}
+                        {getFieldDecorator(nameof<NewPersonItem>('name'), {
+                            initialValue: item.name,
+                        })(this.state.modeDetail ? <Input readOnly /> : <Input />)}
                     </FormItem>
                 </Col>
             </Row>
             <Row gutter={24}>
                 <Col span={20}>
                     <FormItem label={'Last Name'}>
-                        {getFieldDecorator(nameof<NewPersonItem>('LastName'), {
-                            initialValue: item.LastName,
-                        })(
-                            <Input  />
-                        )}
+                        {getFieldDecorator(nameof<NewPersonItem>('lastName'), {
+                            initialValue: item.lastName,
+                        })(this.state.modeDetail ? <Input readOnly /> : <Input />)}
                     </FormItem>
                 </Col>
             </Row>
             <Row gutter={24}>
                 <Col span={20}>
                     <FormItem label={'Occupation'}>
-                        {getFieldDecorator(nameof<NewPersonItem>('Occupation'), {
-                            initialValue: item.Occupation,
-                        })(
-                            <Input />
-                        )}
+                        {getFieldDecorator(nameof<NewPersonItem>('occupation'), {
+                            initialValue: item.occupation,
+                        })(this.state.modeDetail ? <Input readOnly /> : <Input />)}
                     </FormItem>
                 </Col>
-
             </Row>
         </Form>
     }
@@ -137,7 +140,7 @@ class NewPersonItemView extends React.Component<NewPersonItemViewProps & FormCom
                     />
                 }
                 <Spin spinning={this.PersonItemsStore.state.isBusy}>
-                    <PersonItemFormBody item={this.PersonItemsStore.state.item} getFieldDecorator={getFieldDecorator} getFieldValue={this.props.form.getFieldValue} setFieldsValue={this.props.form.setFieldsValue} onSave={this.onCreateNewItem} />
+                    <PersonItemFormBody item={this.PersonItemsStore.state.item} getFieldDecorator={getFieldDecorator} getFieldValue={this.props.form.getFieldValue} setFieldsValue={this.props.form.setFieldsValue} onSave={this.onCreateNewItem} modeDetail={false} />
                 </Spin>
             </Modal>
         );

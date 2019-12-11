@@ -234,3 +234,5 @@ _Pvt_Extensions
 # VS Code
 .vscode
 /src/Ciamgraf.Web/Files
+
+src/PackingListApp/ClientApp/.idea/

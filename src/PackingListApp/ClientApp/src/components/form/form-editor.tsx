@@ -11,7 +11,7 @@ interface FormEditorViewProps extends FormComponentProps{
     onSaveItem: (values: any) => Promise<any>
     style?: React.CSSProperties, 
     autosave: boolean;
-
+    modeDetail: boolean;
 }
 
 interface FormEditorViewState {
@@ -24,7 +24,7 @@ class FormEditorView extends React.Component<FormEditorViewProps, FormEditorView
         super(props);
         this.state = {
             isBusy: false,
-            result: { isSuccess: true, items: [], messages: [] }
+            result: { isSuccess: true, items: [], messages: [] },
         }
     }
 
@@ -84,10 +84,14 @@ class FormEditorView extends React.Component<FormEditorViewProps, FormEditorView
             <div style={this.props.style}>
                 {childrenWithProps}
                 <div style={{ paddingTop: 5, paddingBottom: 5, textAlign: "center", marginTop : "10px" }}>
-                    {isFieldsTouched() && <div/>
-                    //    <div><Button type='primary' style={{ marginRight: "5px", minWidth: "100px" }} onClick={this.onSaveItem}>{'Salvar'}</Button>
-                    //        <Button type='default' style={{ marginLeft: "5px", minWidth : "100px" }} onClick={this.onCancel}>{'Cancelar'}</Button></div>
-                    }
+                    <div>
+                        {isFieldsTouched() && !this.props.modeDetail &&
+                            <Button type='primary' style={{ marginRight: "5px", minWidth: "100px" }} onClick={this.onSaveItem}>{'Salvar'}</Button>
+                        }
+                        {!this.props.modeDetail &&
+                            <Button type='default' style={{ marginLeft: "5px", minWidth: "100px" }} onClick={this.onCancel}>{'Cancelar'}</Button>
+                        }
+                    </div>
                 </div>
             </div>
         </Spin>;

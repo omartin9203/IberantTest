@@ -9,9 +9,9 @@ import { CommandResult } from './types';
 //PERSON REGION
 export interface PersonItem {
     id: number;
-    Name: string;
-    LastName: string;
-    Occupation: string;
+    name: string;
+    lastName: string;
+    occupation: string;
 }
 
 @repository("@@PersonItem", "PersonItem.summary")
@@ -30,24 +30,24 @@ export class PersonItemsStore extends DataStore<PersonItem> {
 }
 
 export interface NewPersonItem {
-    Name: string;
-    LastName: string;
-    Occupation: string;
+    name: string;
+    lastName: string;
+    occupation: string;
 }
 
 export class NewPersonValidator extends Validator<NewPersonItem> {
     constructor() {
         super();
 
-        this.ruleFor(x => x.Name)
+        this.ruleFor(x => x.name)
             .notNull()
             .withMessage("Name cant be empty");
 
-        this.ruleFor(x => x.LastName)
+        this.ruleFor(x => x.lastName)
             .notNull()
             .withMessage("Last Name cant be empty")
 
-        this.ruleFor(x => x.Occupation)
+        this.ruleFor(x => x.occupation)
             .notNull()
             .withMessage("Occupation cant be empty")
     }
@@ -75,15 +75,15 @@ export class PersonValidator extends Validator<PersonItem> {
     constructor() {
         super();
 
-        this.ruleFor(x => x.Name)
+        this.ruleFor(x => x.name)
             .notNull()
             .withMessage("Name cant be null");
 
-        this.ruleFor(x => x.LastName)
+        this.ruleFor(x => x.lastName)
             .notNull()
             .withMessage("Last Name cant be null")
 
-        this.ruleFor(x => x.Occupation)
+        this.ruleFor(x => x.occupation)
             .notNull()
             .withMessage("Occupation cant be null")
 
